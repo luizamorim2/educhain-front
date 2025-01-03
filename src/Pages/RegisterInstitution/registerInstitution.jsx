@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import "./assets/css/style.css";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../../assets/css/style.css";
+import { registerInstitutionService } from "../../Services/services";
 
 const RegisterInstitution = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: '',
-    cnpj: '',
-    email: '',
-    number: '',
-    locale: '',
-    password: '',
+    name: "",
+    cnpj: "",
+    email: "",
+    number: "",
+    locale: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,30 +25,18 @@ const RegisterInstitution = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    const response = await registerInstitutionService(
+      formData.name,
+      formData.cnpj,
+      formData.locale,
+      formData.number,
+      formData.password
+    );
 
-      if (response.ok) {
-        alert('Cadastro realizado com sucesso!');
-        setFormData({
-          name: '',
-          cnpj: '',
-          email: '',
-          number: '',
-          locale: '',
-          password: '',
-        });
-      } else {
-        const error = await response.json();
-        alert(`Erro: ${error.message}`);
-      }
-    } catch (err) {
-      alert('Erro ao conectar ao servidor.');
-      console.error(err);
+    if (response) {
+      navigate("/login");
+    } else {
+      alert("Erro ao cadastrar instituição!");
     }
   };
 
@@ -74,13 +66,18 @@ const RegisterInstitution = () => {
       </header>
 
       <div className="contact-page-1 space">
-        <div className="contact-sec space bg-repeat overflow-hidden" data-bg-src="">
+        <div
+          className="contact-sec space bg-repeat overflow-hidden"
+          data-bg-src=""
+        >
           <div className="container">
             <div className="row align-items-center justify-content-center">
               <div className="col-xl-6 pe-xxl-5">
                 <div className="title-area">
                   <span className="sub-title style2">Área de registro</span>
-                  <h2 className="sec-title text-white">Cadastrar instituição</h2>
+                  <h2 className="sec-title text-white">
+                    Cadastrar instituição
+                  </h2>
                 </div>
                 <form onSubmit={handleSubmit}>
                   <div className="row">
@@ -141,7 +138,7 @@ const RegisterInstitution = () => {
                     </div>
                     <div className="form-group style-border2 col-md-6 position-relative">
                       <input
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         className="form-control"
                         name="password"
                         value={formData.password}
@@ -152,10 +149,14 @@ const RegisterInstitution = () => {
                       <span
                         id="togglePassword"
                         className="position-absolute"
-                        style={{ cursor: 'pointer', right: '30px', top: '18px' }}
+                        style={{
+                          cursor: "pointer",
+                          right: "30px",
+                          top: "18px",
+                        }}
                         onClick={togglePassword}
                       >
-                        {showPassword ? '🙈' : '👁️'}
+                        {showPassword ? "🙈" : "👁️"}
                       </span>
                     </div>
                   </div>
@@ -167,7 +168,10 @@ const RegisterInstitution = () => {
                     </div>
                     <div className="style-border2 col-md-6">
                       <h6 className="sec-title text-white">
-                        Já tem cadastro? <Link to="/login" className="text-primary">efetue login</Link>
+                        Já tem cadastro?{" "}
+                        <Link to="/login" className="text-primary">
+                          efetue login
+                        </Link>
                       </h6>
                     </div>
                   </div>
