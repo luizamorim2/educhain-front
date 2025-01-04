@@ -1,8 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 
-function Header() {
+const Header = () => {
+  const [loggedUser, setLoggedUser] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("cnpj");
+    if (user) {
+      setLoggedUser(user);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <header className="th-header header-layout1">
       <div className="sticky-wrapper">
@@ -16,6 +31,19 @@ function Header() {
                   </Link>
                 </div>
               </div>
+              <div className="col-auto ms-auto">
+                {loggedUser && (
+                  <div className="d-flex align-items-center">
+                    <span className="me-3">Logado como: {loggedUser}</span>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleLogout}
+                    >
+                      Deslogar
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="logo-bg"></div>
@@ -23,9 +51,16 @@ function Header() {
       </div>
     </header>
   );
-}
+};
 
 function HeroSection() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("cnpj");
+    setIsLoggedIn(!!user);
+  }, []);
+
   return (
     <div
       className="th-hero-wrapper hero-1"
@@ -42,12 +77,26 @@ function HeroSection() {
               EduChain
             </span>
           </h1>
+          {!isLoggedIn && (  
           <div className="btn-group custom-anim-top wow animated">
             <Link to="/registerInstitution" className="th-btn">
               Cadastrar Instituição{" "}
               <i className="fa-solid fa-arrow-right ms-2"></i>
             </Link>
           </div>
+        )}
+          <div
+                ></div>
+          {isLoggedIn && (
+            <div className="btn-group custom-anim-top wow animated">
+              <Link to="/registerCertificate" className="th-btn">
+                Emitir Certificado{" "}
+                <i className="fa-solid fa-arrow-right ms-2"></i>
+              </Link>
+            </div>
+          )}
+          <div
+                ></div>
           <div className="btn-group custom-anim-top wow animated">
             <Link to="/certificate/" className="th-btn">
               Verificar certificado{" "}
@@ -95,6 +144,9 @@ function Footer() {
 }
 
 function HomePage() {
+  useEffect(() => {
+    document.title = 'EduChain - Pagina inicial';
+  }, []);
   return (
     <>
       <Header />

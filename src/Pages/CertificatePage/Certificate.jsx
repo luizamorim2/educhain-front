@@ -3,7 +3,6 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import educhain from "../../assets/educhain.png";
 import "./Certificate.css"; 
 

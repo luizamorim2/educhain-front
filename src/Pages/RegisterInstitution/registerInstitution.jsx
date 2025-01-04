@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { registerInstitutionService } from "../../Services/services";
 
 const RegisterInstitution = () => {
+  useEffect(() => {
+      document.title = 'EduChain - Cadastrar instituição';
+    }, []);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

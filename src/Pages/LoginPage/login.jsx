@@ -1,29 +1,58 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { loginInstitutonService } from "../../Services/services";
-import { useNavigate } from "react-router-dom";
 
-const Header = () => (
-  <header className="th-header header-layout1">
-    <div className="sticky-wrapper">
-      <div className="menu-area">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-auto">
-              <div className="header-logo">
-                <Link to="/">
-                  <img src="src/assets/img/logo.png" alt="EduChain" />
-                </Link>
+const Header = () => {
+  const [loggedUser, setLoggedUser] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("cnpj");
+    if (user) {
+      setLoggedUser(user);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
+  return (
+    <header className="th-header header-layout1">
+      <div className="sticky-wrapper">
+        <div className="menu-area">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-auto">
+                <div className="header-logo">
+                  <Link to="/">
+                    <img src="src/assets/img/logo.png" alt="EduChain" />
+                  </Link>
+                </div>
+              </div>
+              <div className="col-auto ms-auto">
+                {loggedUser && (
+                  <div className="d-flex align-items-center">
+                    <span className="me-3">Logado como: {loggedUser}</span>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleLogout}
+                    >
+                      Deslogar
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
+          <div className="logo-bg"></div>
         </div>
-        <div className="logo-bg"></div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 const LoginForm = ({
   passwordType,
@@ -37,9 +66,7 @@ const LoginForm = ({
       <div className="row align-items-center justify-content-center">
         <div className="col-xl-6 pe-xxl-5">
           <div className="title-area">
-            <h2 className="sec-title text-white">
-              Conecte-se a sua instituição
-            </h2>
+            <h2 className="sec-title text-white">Conecte-se a sua instituição</h2>
           </div>
           <form id="registerForm" method="POST" onSubmit={handleSubmit}>
             <div className="row">
@@ -89,6 +116,9 @@ const LoginForm = ({
 );
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "EduChain - Autenticação";
+  }, []);
   const navigate = useNavigate();
   const [passwordType, setPasswordType] = useState("password");
   const [passwordIcon, setPasswordIcon] = useState("👁️");
@@ -121,6 +151,8 @@ const Login = () => {
     );
 
     if (response) {
+      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("cnpj", formData.cnpj);
       navigate("/registerCertificate");
     } else {
       alert("Erro ao realizar login!");

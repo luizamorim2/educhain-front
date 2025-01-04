@@ -7,6 +7,7 @@ import RegisterInstitution from "./Pages/RegisterInstitution/registerInstitution
 import RegisterCertificate from "./Pages/RegisterCertificatePage/registerCertificate.jsx";
 import Login from "./Pages/LoginPage/login.jsx";
 import CheckPage from "./Pages/CheckPage/checkPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -14,12 +15,17 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/registerInstitution" element={<RegisterInstitution />} />
-        <Route path="/registerCertificate" element={<RegisterCertificate />} />
         <Route path="/login" element={<Login />} />
         <Route path="/certificate" element={<CheckPage />} />
         <Route path="/certificate/:hash" element={<CertificatePage />} />
 
-        {/* Rota coringa para redirecionar para a home page */}
+        {}
+        <Route
+          path="/registerCertificate"
+          element={<ProtectedRoute element={<RegisterCertificate />} />}
+        />
+
+        {}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

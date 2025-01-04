@@ -1,29 +1,58 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { registerCertificateService } from "../../Services/services";
-import { useNavigate } from "react-router-dom";
 
-const Header = () => (
-  <header className="th-header header-layout1">
-    <div className="sticky-wrapper">
-      <div className="menu-area">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-auto">
-              <div className="header-logo">
-                <Link to="/">
-                  <img src="src/assets/img/logo.png" alt="EduChain" />
-                </Link>
+const Header = () => {
+  const [loggedUser, setLoggedUser] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("cnpj");
+    if (user) {
+      setLoggedUser(user);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
+  return (
+    <header className="th-header header-layout1">
+      <div className="sticky-wrapper">
+        <div className="menu-area">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-auto">
+                <div className="header-logo">
+                  <Link to="/">
+                    <img src="src/assets/img/logo.png" alt="EduChain" />
+                  </Link>
+                </div>
+              </div>
+              <div className="col-auto ms-auto">
+                {loggedUser && (
+                  <div className="d-flex align-items-center">
+                    <span className="me-3">Logado como: {loggedUser}</span>
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleLogout}
+                    >
+                      Deslogar
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
+          <div className="logo-bg"></div>
         </div>
-        <div className="logo-bg"></div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 const CertificateForm = ({ formData, handleChange, handleSubmit }) => (
   <div className="contact-sec space bg-repeat overflow-hidden">
@@ -36,35 +65,15 @@ const CertificateForm = ({ formData, handleChange, handleSubmit }) => (
           </div>
           <form id="registerForm" onSubmit={handleSubmit}>
             <div className="row">
-              {[
-                {
-                  name: "name",
-                  placeholder: "Nome do estudante",
-                  type: "text",
-                },
+              {[ 
+                { name: "name", placeholder: "Nome do estudante", type: "text" },
                 { name: "cpf", placeholder: "CPF", type: "text" },
                 { name: "locale", placeholder: "Nome do curso", type: "text" },
                 { name: "duration", placeholder: "Duração", type: "text" },
-                {
-                  name: "modality",
-                  placeholder: "Modalidade de ensino",
-                  type: "text",
-                },
-                {
-                  name: "startDate",
-                  placeholder: "Data de início",
-                  type: "date",
-                },
-                {
-                  name: "graduationDate",
-                  placeholder: "Data de graduação",
-                  type: "date",
-                },
-                {
-                  name: "companyCNPJ",
-                  placeholder: "CNPJ Da empresa",
-                  type: "text",
-                },
+                { name: "modality", placeholder: "Modalidade de ensino", type: "text" },
+                { name: "startDate", placeholder: "Data de início", type: "date" },
+                { name: "graduationDate", placeholder: "Data de graduação", type: "date" },
+                { name: "companyCNPJ", placeholder: "CNPJ Da empresa", type: "text" }
               ].map(({ name, placeholder, type }) => (
                 <div className="form-group style-border2 col-md-6" key={name}>
                   <input
@@ -139,6 +148,7 @@ const RegisterCertificate = () => {
 
   return (
     <>
+      {}
       <Header />
       <div className="contact-page-1 space">
         <CertificateForm
